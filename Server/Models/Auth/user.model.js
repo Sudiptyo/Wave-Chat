@@ -9,7 +9,6 @@ const userSchema = new Schema({
     fullName: {
         type: String,
         required: true,
-        unique: true,
         lowercase: true,
         trim: true
     },
@@ -19,6 +18,13 @@ const userSchema = new Schema({
         unique: true,
         lowercase: true,
         trim: true
+    },
+    mobileNo: {
+        type: String,
+        required: [true, 'Phone Number must be provided'],
+        index: true,
+        trim: true,
+        max: 10
     },
     password: {
         type: String,
@@ -51,7 +57,7 @@ userSchema.pre('save', async function () {
 })
 
 userSchema.methods.isPasswordCorrect = async function (password) {
-    return bcrypt.compare(password, this.password)
+    return await bcrypt.compare(password, this.password)
 }
 
 userSchema.methods.generateAccessToken = function () {
