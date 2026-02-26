@@ -1,11 +1,14 @@
-import React from 'react'
+import React from "react";
+import Layout from "./Components/SideBar/Layout";
+import Welcome from "./Pages/Welcome/Welcome";
 
 const App = () => {
   return (
     <>
-    <div className="w-10 h-10 bg-green-600 ">jgk</div>
+      {/* <Layout /> */}
+      <Welcome />
     </>
-  )
-}
+  );
+};
 
-export default App
+export default App;

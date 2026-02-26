@@ -2,6 +2,17 @@ import { model, Schema } from "mongoose";
 import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
 
+export const User_Role = Object.freeze({
+    ADMIN: 'admin',
+    USER: 'user'
+})
+
+export const User_Status = Object.freeze({
+    ACTIVE: 'active',
+    INACTIVE: 'inactive',
+    SUSPENDED: 'suspended'
+})
+
 const userSchema = new Schema({
     avatar: {
         type: String
@@ -22,37 +33,69 @@ const userSchema = new Schema({
     mobileNo: {
         type: String,
         required: [true, 'Phone Number must be provided'],
-        index: true,
+        unique: true,
         trim: true,
-        max: 10
+        minlength: 10,
+        maxlength: 10
     },
     password: {
         type: String,
         required: [true, 'Password must be provided'],
-        min: 6,
-        max: 15
+        minlength: 6,
+        maxlength: 15,
+        select: false
+    },
+    role: {
+        type: String,
+        enum: Object.values(User_Role),
+        default: User_Role.USER
     },
     about: {
         type: String,
-        lowercase: true,
         trim: true
     },
     email: {
         type: String,
         lowercase: true,
-        trim: true
+        match: [/^\S+@\S+\.\S+$/, 'Please enter a valid email'],
+        trim: true,
     },
     isEmailBinded: {
         type: Boolean,
         default: false
     },
+    status: {
+        type: String,
+        enum: Object.values(User_Status),
+        default: User_Status.INACTIVE
+    },
+    lastSeen: {
+        type: Date,
+        default: Date.now
+    },
+    accountStatus: {
+        type: Boolean,
+        default: true
+    },
+    accountVerified: {
+        type: Boolean,
+        default: false
+    },
+    credits: {
+        type: Number,
+        default: 30
+    },
     refreshToken: {
-        type: String
+        type: String,
+        select: false
     }
 }, { timestamps: true })
 
+userSchema.index(
+    { email: 1 }, { unique: true, sparse: true })
+
 userSchema.pre('save', async function () {
-    if (!this.password) return;
+    if (!this.isModified('password')) return
     this.password = await bcrypt.hash(this.password, 10)
 })
 
