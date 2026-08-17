@@ -30,8 +30,8 @@ const contactSchema = new Schema<IContact>(
 );
 
 contactSchema.index({ userId: 1, contactedId: 1 }, { unique: true }); // Prevent duplicate contacts between the same users
-contactSchema.index({ userId: 1, status: 1 }); // To quickly find contacts of a user by status
-contactSchema.index({ contactedId: 1, status: 1 }); // To quickly find contacts of a user by status
+// contactSchema.index({ userId: 1, status: 1 }); // To quickly find contacts of a user by status
+// contactSchema.index({ contactedId: 1, status: 1 }); // To quickly find contacts of a user by status
 
 contactSchema.pre("validate", function () {
   if (this.userId && this.contactedId && this.userId.equals(this.contactedId)) {
