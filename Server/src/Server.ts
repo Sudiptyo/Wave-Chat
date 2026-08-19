@@ -4,8 +4,8 @@ dotenv.config();
 
 import { app } from "./App.js";
 import { connectDb } from "./Db/db.js";
+import { logger } from "./Utils/logger.js";
 
-// const PORT:number = Number(process.env.PORT) || 3000;
 const PORT = Number(process.env.PORT ?? "3000");
 
 if (Number.isNaN(PORT)) {
@@ -17,13 +17,16 @@ const startServer = async () => {
     await connectDb();
 
     app.listen(PORT, () => {
-      console.log(`⚙️  Server is running on port ${PORT}`);
+      logger.info({ port: PORT }, `Server is running on port`);
     });
   } catch (err: unknown) {
     if (err instanceof Error) {
-      console.error("❌ Failed to start server:", err.message);
+      logger.error({ err: err }, "❌ Failed to start server:");
     } else {
-      console.error("❌ Failed to start server due to an unknown error.");
+      logger.error(
+        { err: err },
+        "❌ Failed to start server due to an unknown error.",
+      );
     }
 
     process.exit(1);
