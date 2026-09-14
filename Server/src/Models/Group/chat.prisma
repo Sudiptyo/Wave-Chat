@@ -1,0 +1,30 @@
+model GroupChat {
+    id                      String   @id @default(uuid()) @db.Uuid
+    conversationId          String   @unique @db.Uuid
+    createdBy               String   @db.Uuid
+    avatar                  String?
+    groupName               String
+    description             String?
+    memberCount             Int      @default(1)
+    isPrivate               Boolean  @default(true)
+    requiresJoiningApproval Boolean  @default(false)
+    adminCount              Int      @default(1)
+    lastMessageId           String?  @db.Uuid
+    isDeleted               Boolean  @default(false)
+    trackReadStatus         Boolean  @default(true)
+    createdAt               DateTime @default(now())
+    updatedAt               DateTime @updatedAt
+
+    conversation Conversation       @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+    creator      User               @relation("GroupCreator", fields: [createdBy], references: [id], onDelete: Cascade)
+    lastMessage  Message?           @relation("GroupLastMessage", fields: [lastMessageId], references: [id], onDelete: SetNull)
+    members      GroupMember[]
+    invites      GroupInvite[]
+    joinRequests GroupJoinRequest[]
+    reports      Report[]
+
+    @@index([createdBy])
+    @@index([groupName])
+    @@index([isDeleted, createdAt(sort: Desc)])
+    @@map("group_chats")
+}

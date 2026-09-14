@@ -1,0 +1,25 @@
+enum GroupInviteStatus {
+    PENDING  @map("pending")
+    ACCEPTED @map("accepted")
+    DECLINED @map("declined")
+}
+
+model GroupInvite {
+    id            String            @id @default(uuid()) @db.Uuid
+    groupId       String            @db.Uuid
+    invitedBy     String            @db.Uuid
+    invitedUserId String            @db.Uuid
+    status        GroupInviteStatus @default(PENDING)
+    expiresAt     DateTime
+    createdAt     DateTime          @default(now())
+    updatedAt     DateTime          @updatedAt
+
+    group         GroupChat @relation(fields: [groupId], references: [id], onDelete: Cascade)
+    invitedByUser User      @relation("GroupInviteSender", fields: [invitedBy], references: [id], onDelete: Cascade)
+    invitedUser   User      @relation("GroupInviteReceiver", fields: [invitedUserId], references: [id], onDelete: Cascade)
+
+    @@index([groupId, invitedUserId, status])
+    @@index([invitedUserId, status])
+    @@index([expiresAt])
+    @@map("group_invites")
+}

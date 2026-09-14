@@ -1,0 +1,43 @@
+enum MessageType {
+    TEXT  @map("text")
+    MEDIA @map("media")
+    VOICE @map("voice")
+}
+
+model Message {
+    id              String      @id @default(uuid()) @db.Uuid
+    conversationId  String      @db.Uuid
+    senderId        String      @db.Uuid
+    replyToId       String?     @db.Uuid
+    storyId         String?     @db.Uuid
+    messageType     MessageType @default(TEXT)
+    content         String?     @db.VarChar(50000)
+    forwardedFromId String?     @db.Uuid
+    isEdited        Boolean     @default(false)
+    editedAt        DateTime?
+    deletedAt       DateTime?
+    createdAt       DateTime    @default(now())
+    updatedAt       DateTime    @updatedAt
+
+    conversation         Conversation        @relation("ConversationMessages", fields: [conversationId], references: [id], onDelete: Cascade)
+    sender               User                @relation("MessageSender", fields: [senderId], references: [id], onDelete: Cascade)
+    replyTo              Message?            @relation("MessageReplies", fields: [replyToId], references: [id], onDelete: SetNull)
+    replies              Message[]           @relation("MessageReplies")
+    story                Story?              @relation(fields: [storyId], references: [id], onDelete: SetNull)
+    forwardedFrom        Message?            @relation("ForwardedMessages", fields: [forwardedFromId], references: [id], onDelete: SetNull)
+    forwardedCopies      Message[]           @relation("ForwardedMessages")
+    attachments          MessageAttachment[]
+    mentions             MessageMention[]
+    pins                 Pinned[]            @relation("PinnedMessage")
+    statuses             MessageStatus[]
+    reactions            Reaction[]
+    reports              Report[]
+    lastForConversations Conversation?       @relation("LastMessage")
+    groupLastMessages    GroupChat[]         @relation("GroupLastMessage")
+
+    @@index([conversationId, createdAt(sort: Desc)])
+    @@index([senderId, createdAt(sort: Desc)])
+    @@index([replyToId])
+    @@index([forwardedFromId])
+    @@map("messages")
+}

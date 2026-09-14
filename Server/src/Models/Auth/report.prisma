@@ -1,0 +1,42 @@
+enum ReportStatus {
+    PENDING  @map("pending")
+    RESOLVED @map("resolved")
+    REJECTED @map("rejected")
+}
+
+enum ReportType {
+    SPAM                  @map("spam")
+    SCAM                  @map("scam")
+    HARASSMENT            @map("harassment")
+    INSULT                @map("insult")
+    ABUSE                 @map("abuse")
+    INAPPROPRIATE_CONTENT @map("inappropriate")
+    OTHER                 @map("other")
+}
+
+model Report {
+    id             String       @id @default(uuid()) @db.Uuid
+    reporterId     String       @db.Uuid
+    reportedUserId String       @db.Uuid
+    messageId      String?      @db.Uuid
+    conversationId String?      @db.Uuid
+    groupId        String?      @db.Uuid
+    storyId        String?      @db.Uuid
+    reason         ReportType
+    description    String?      @db.VarChar(1000)
+    status         ReportStatus @default(PENDING)
+    createdAt      DateTime     @default(now())
+    updatedAt      DateTime     @updatedAt
+
+    reporter     User          @relation("Reporter", fields: [reporterId], references: [id], onDelete: Cascade)
+    reportedUser User          @relation("ReportedUser", fields: [reportedUserId], references: [id], onDelete: Cascade)
+    message      Message?      @relation(fields: [messageId], references: [id], onDelete: SetNull)
+    conversation Conversation? @relation(fields: [conversationId], references: [id], onDelete: SetNull)
+    group        GroupChat?    @relation(fields: [groupId], references: [id], onDelete: SetNull)
+    story        Story?        @relation(fields: [storyId], references: [id], onDelete: SetNull)
+
+    @@index([status, createdAt(sort: Desc)])
+    @@index([reportedUserId, createdAt(sort: Desc)])
+    @@index([reporterId, createdAt(sort: Desc)])
+    @@map("reports")
+}

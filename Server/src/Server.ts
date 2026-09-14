@@ -1,31 +1,21 @@
-import dotenv from "dotenv";
-
-dotenv.config();
-
+import "dotenv/config";
 import { app } from "./App.js";
 import { connectDb } from "./Db/db.js";
-import { logger } from "./Utils/logger.js";
-
-const PORT = Number(process.env.PORT ?? "3000");
-
-if (Number.isNaN(PORT)) {
-  throw new Error("Invalid PORT value in .env");
-}
+import { PORT } from "./Config/Dotenv.js";
 
 const startServer = async () => {
   try {
-    await connectDb();
+    await app.ready();
+    // await connectDb();
 
-    app.listen(PORT, () => {
-      logger.info({ port: PORT }, `Server is running on port`);
-    });
+    app.listen({ port: PORT });
   } catch (err: unknown) {
     if (err instanceof Error) {
-      logger.error({ err: err }, "❌ Failed to start server:");
+      app.log.error({ err: err }, "Server failed to start: ");
     } else {
-      logger.error(
+      app.log.fatal(
         { err: err },
-        "❌ Failed to start server due to an unknown error.",
+        "Server failed to start due to unknown error",
       );
     }
 

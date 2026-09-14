@@ -1,0 +1,18 @@
+model StoryView {
+    id       String    @id @default(uuid()) @db.Uuid
+    storyId  String    @db.Uuid
+    viewerId String    @db.Uuid
+    viewedAt DateTime  @default(now())
+    isLoved  Boolean   @default(false)
+    lovedAt  DateTime?
+
+    story  Story @relation(fields: [storyId], references: [id], onDelete: Cascade)
+    viewer User  @relation("StoryViewer", fields: [viewerId], references: [id], onDelete: Cascade)
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    @@unique([storyId, viewerId])
+    @@index([storyId, viewedAt(sort: Desc)])
+    @@map("story_views")
+}
