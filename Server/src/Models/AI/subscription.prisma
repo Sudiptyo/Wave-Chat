@@ -1,26 +1,26 @@
 enum AiSubscriptionStatus {
-    PENDING  @map("pending")
-    PAID     @map("paid")
-    FAILED   @map("failed")
-    REJECTED @map("rejected")
+  PENDING  @map("pending")
+  PAID     @map("paid")
+  FAILED   @map("failed")
+  REJECTED @map("rejected")
 }
 
 model AiSubscription {
-    id            String               @id @default(uuid()) @db.Uuid
-    userId        String               @db.Uuid
-    planId        String               @db.Uuid
-    currency      String               @default("INR") @db.Char(3)
-    amount        Int
-    credits       Int
-    paymentLinkId String               @unique
-    paymentId     String?              @unique
-    status        AiSubscriptionStatus @default(PENDING)
-    createdAt     DateTime             @default(now())
-    updatedAt     DateTime             @updatedAt
+  id            String               @id @default(uuid()) @db.Uuid
+  userId        String               @db.Uuid
+  planId        String               @db.Uuid
+  currency      String               @default("INR") @db.Char(3)
+  amount        Int
+  credits       Int
+  paymentLinkId String               @unique
+  paymentId     String?              @unique
+  status        AiSubscriptionStatus @default(PENDING)
+  createdAt     DateTime             @default(now())
+  updatedAt     DateTime             @updatedAt
 
-    user User   @relation(fields: [userId], references: [id], onDelete: Cascade)
-    plan AiPlan @relation(fields: [planId], references: [id], onDelete: Restrict)
+  user User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  plan AiPlan @relation(fields: [planId], references: [id], onDelete: Restrict)
 
-    @@index([userId])
-    @@map("ai_subscriptions")
+  @@index([userId])
+  @@map("ai_subscriptions")
 }

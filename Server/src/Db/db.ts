@@ -1,25 +1,21 @@
-import { connect } from "mongoose";
-import { logger } from "../Utils/logger.js";
+import { app } from "../App.js";
+import { prisma } from "./prisma.js";
 
 const connectDb = async () => {
-  try {
-    const MONGO_URI = process.env.MONGO_URI;
+    try {
+        await prisma.$connect();
 
-    if (!MONGO_URI) {
-      throw new Error("MONGO_URI is missing."); // Without this: connect() receives -> string | undefined
+        await prisma.$queryRaw`SELECT 1`;
+
+        app.log.info("PostgreSQL connected");
+    } catch (err: unknown) {
+        app.log.error({ err: err }, "PostgreSQL connection failed");
+        process.exit(1);
     }
-
-    await connect(MONGO_URI);
-    logger.info("MongoDB connected");
-  } catch (err: unknown) {
-    if (err instanceof Error) {
-      logger.error({ err: err }, "MongoDB connection error:");
-    } else {
-      logger.error("Unknown MongoDB connection error");
-    }
-
-    process.exit(1); // Stop the server if DB connection fails
-  }
 };
 
-export { connectDb };
+const disconnectDb = async () => {
+    await prisma.$disconnect();
+};
+
+export { connectDb, disconnectDb };

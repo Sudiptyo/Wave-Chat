@@ -1,62 +1,62 @@
 enum StoryPrivacy {
-    PUBLIC        @map("public")
-    CLOSE_FRIENDS @map("close_friends")
-    PRIVATE       @map("private")
+  PUBLIC        @map("public")
+  CLOSE_FRIENDS @map("close_friends")
+  PRIVATE       @map("private")
 }
 
 enum StoryType {
-    TEXT  @map("text")
-    IMAGE @map("image")
-    VIDEO @map("video")
-    VOICE @map("voice")
+  TEXT  @map("text")
+  IMAGE @map("image")
+  VIDEO @map("video")
+  VOICE @map("voice")
 }
 
 model Story {
-    id          String       @id @default(uuid()) @db.Uuid
-    userId      String       @db.Uuid
-    storyType   StoryType    @default(TEXT)
-    mediaUrl    String?
-    textContent String?
-    privacy     StoryPrivacy @default(PUBLIC)
-    viewsCount  Int          @default(0)
-    loveCount   Int          @default(0)
-    isArchived  Boolean      @default(false)
-    expiresAt   DateTime     @default(dbgenerated("CURRENT_TIMESTAMP + INTERVAL '24 hours'"))
-    createdAt   DateTime     @default(now())
-    updatedAt   DateTime     @updatedAt
+  id          String       @id @default(uuid()) @db.Uuid
+  userId      String       @db.Uuid
+  storyType   StoryType    @default(TEXT)
+  mediaUrl    String?
+  textContent String?
+  privacy     StoryPrivacy @default(PUBLIC)
+  viewsCount  Int          @default(0)
+  loveCount   Int          @default(0)
+  isArchived  Boolean      @default(false)
+  expiresAt   DateTime     @default(dbgenerated("CURRENT_TIMESTAMP + INTERVAL '24 hours'"))
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
 
-    user          User                @relation(fields: [userId], references: [id], onDelete: Cascade)
-    views         StoryView[]
-    messages      Message[]
-    reports       Report[]
-    excludedUsers StoryExcludedUser[]
-    allowedUsers  StoryAllowedUser[]
+  user          User                @relation(fields: [userId], references: [id], onDelete: Cascade)
+  views         StoryView[]
+  messages      Message[]
+  reports       Report[]
+  excludedUsers StoryExcludedUser[]
+  allowedUsers  StoryAllowedUser[]
 
-    @@index([userId, createdAt(sort: Desc)])
-    @@index([expiresAt, createdAt(sort: Desc)])
-    @@map("stories")
+  @@index([userId, createdAt(sort: Desc)])
+  @@index([expiresAt, createdAt(sort: Desc)])
+  @@map("stories")
 }
 
 model StoryExcludedUser {
-    id      String @id @default(uuid()) @db.Uuid
-    storyId String @db.Uuid
-    userId  String @db.Uuid
+  id      String @id @default(uuid()) @db.Uuid
+  storyId String @db.Uuid
+  userId  String @db.Uuid
 
-    story Story @relation(fields: [storyId], references: [id], onDelete: Cascade)
-    user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  story Story @relation(fields: [storyId], references: [id], onDelete: Cascade)
+  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-    @@unique([storyId, userId])
-    @@map("story_excluded_users")
+  @@unique([storyId, userId])
+  @@map("story_excluded_users")
 }
 
 model StoryAllowedUser {
-    id      String @id @default(uuid()) @db.Uuid
-    storyId String @db.Uuid
-    userId  String @db.Uuid
+  id      String @id @default(uuid()) @db.Uuid
+  storyId String @db.Uuid
+  userId  String @db.Uuid
 
-    story Story @relation(fields: [storyId], references: [id], onDelete: Cascade)
-    user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  story Story @relation(fields: [storyId], references: [id], onDelete: Cascade)
+  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-    @@unique([storyId, userId])
-    @@map("story_allowed_users")
+  @@unique([storyId, userId])
+  @@map("story_allowed_users")
 }

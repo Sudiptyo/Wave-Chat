@@ -1,26 +1,26 @@
 enum FriendRequestStatus {
-    PENDING  @map("pending")
-    ACCEPTED @map("accepted")
-    REJECTED @map("rejected")
+  PENDING  @map("pending")
+  ACCEPTED @map("accepted")
+  REJECTED @map("rejected")
 }
 
 model FriendRequest {
-    id             String              @id @default(uuid()) @db.Uuid
-    senderId       String              @db.Uuid
-    receiverId     String              @db.Uuid
-    conversationId String?             @db.Uuid
-    message        String              @default("Hey 👋 I'd like to connect with you on WaveChat") @db.VarChar(500)
-    status         FriendRequestStatus @default(PENDING)
-    respondedAt    DateTime?
-    createdAt      DateTime            @default(now())
-    updatedAt      DateTime            @updatedAt
+  id             String              @id @default(uuid()) @db.Uuid
+  senderId       String              @db.Uuid
+  receiverId     String              @db.Uuid
+  conversationId String?             @db.Uuid
+  message        String              @default("Hey 👋 I'd like to connect with you on WaveChat") @db.VarChar(500)
+  status         FriendRequestStatus @default(PENDING)
+  respondedAt    DateTime?
+  createdAt      DateTime            @default(now())
+  updatedAt      DateTime            @updatedAt
 
-    sender       User          @relation("FriendRequestSender", fields: [senderId], references: [id], onDelete: Cascade)
-    receiver     User          @relation("FriendRequestReceiver", fields: [receiverId], references: [id], onDelete: Cascade)
-    conversation Conversation? @relation(fields: [conversationId], references: [id], onDelete: SetNull)
+  sender       User          @relation("FriendRequestSender", fields: [senderId], references: [id], onDelete: Cascade)
+  receiver     User          @relation("FriendRequestReceiver", fields: [receiverId], references: [id], onDelete: Cascade)
+  conversation Conversation? @relation(fields: [conversationId], references: [id], onDelete: SetNull)
 
-    @@index([senderId, status])
-    @@index([receiverId, status])
-    @@index([senderId, receiverId])
-    @@map("friend_requests")
+  @@index([senderId, status])
+  @@index([receiverId, status])
+  @@index([senderId, receiverId])
+  @@map("friend_requests")
 }

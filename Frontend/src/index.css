@@ -1,0 +1,352 @@
+@import "@fontsource/manrope/400.css";
+@import "@fontsource/manrope/500.css";
+@import "@fontsource/manrope/600.css";
+@import "@fontsource/manrope/700.css";
+
+@import "tailwindcss";
+
+/* ═══════════════════════════════════════════════════════════════
+   WAVECHAT THEME
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ───────────────────────────────────────────────────────────────
+   Light Theme
+   ─────────────────────────────────────────────────────────────── */
+
+:root {
+  color-scheme: light;
+
+  /* Base */
+  --background: 150 20% 97%;
+  --foreground: 170 45% 10%;
+
+  /* Surfaces */
+  --card: 0 0% 100%;
+  --card-foreground: 170 45% 10%;
+
+  --popover: 0 0% 100%;
+  --popover-foreground: 170 45% 10%;
+
+  /* Brand */
+  --primary: 164 58% 43%;
+  --primary-foreground: 0 0% 100%;
+
+  /* Secondary */
+  --secondary: 165 20% 93%;
+  --secondary-foreground: 170 40% 14%;
+
+  /* Muted */
+  --muted: 160 15% 93%;
+  --muted-foreground: 170 10% 45%;
+
+  /* Accent */
+  --accent: 164 58% 43%;
+  --accent-foreground: 0 0% 100%;
+
+  /* Feedback */
+  --destructive: 0 72% 55%;
+  --destructive-foreground: 0 0% 100%;
+
+  /* UI */
+  --border: 165 15% 85%;
+  --input: 165 15% 85%;
+  --ring: 164 58% 43%;
+
+  /* Layout */
+  --radius: 0.75rem;
+
+  /* Typography */
+  --font-sans: "Manrope", system-ui, sans-serif;
+  --font-mono: Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+}
+
+
+/* ───────────────────────────────────────────────────────────────
+   Dark Theme
+   Add .dark to <html>
+   ─────────────────────────────────────────────────────────────── */
+
+.dark {
+  color-scheme: dark;
+
+  /* Base */
+  --background: 207 63% 8%;
+  --foreground: 210 25% 96%;
+
+  /* Surfaces */
+  --card: 207 50% 11%;
+  --card-foreground: 210 25% 96%;
+
+  --popover: 207 50% 11%;
+  --popover-foreground: 210 25% 96%;
+
+  /* Brand */
+  --primary: 164 58% 55%;
+  --primary-foreground: 207 63% 8%;
+
+  /* Secondary */
+  --secondary: 207 35% 17%;
+  --secondary-foreground: 210 25% 96%;
+
+  /* Muted */
+  --muted: 207 30% 16%;
+  --muted-foreground: 210 12% 65%;
+
+  /* Accent */
+  --accent: 164 58% 55%;
+  --accent-foreground: 207 63% 8%;
+
+  /* Feedback */
+  --destructive: 0 65% 52%;
+  --destructive-foreground: 0 0% 100%;
+
+  /* UI */
+  --border: 207 30% 23%;
+  --input: 207 30% 23%;
+  --ring: 164 58% 55%;
+
+  /* Layout */
+  --radius: 0.75rem;
+}
+
+
+/* ═══════════════════════════════════════════════════════════════
+   GLOBAL RESET
+   ═══════════════════════════════════════════════════════════════ */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  border-color: hsl(var(--border));
+}
+
+html {
+  min-height: 100%;
+  font-family: var(--font-sans);
+
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  margin: 0;
+  min-height: 100dvh;
+
+  font-family: var(--font-sans);
+  font-weight: 400;
+
+  color: hsl(var(--foreground));
+
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  overflow-x: hidden;
+}
+
+#root {
+  min-height: 100dvh;
+}
+
+
+/* ═══════════════════════════════════════════════════════════════
+   WAVECHAT GLOBAL BACKGROUND
+   ═══════════════════════════════════════════════════════════════ */
+
+/*
+  Light theme background.
+
+  The screenshots show a very subtle warm/greenish glow,
+  rather than a completely flat white background.
+*/
+
+body {
+  background:
+    radial-gradient(
+      circle at 88% 0%,
+      rgba(75, 170, 160, 0.16),
+      transparent 38%
+    ),
+    radial-gradient(
+      circle at 8% 20%,
+      rgba(100, 180, 170, 0.08),
+      transparent 32%
+    ),
+    hsl(var(--background));
+}
+
+
+/*
+  Dark theme background.
+
+  This creates the blue/teal glow visible in the
+  WaveChat dark-theme screenshots.
+*/
+
+.dark body {
+  background:
+    radial-gradient(
+      circle at 88% 0%,
+      rgba(43, 135, 165, 0.35),
+      transparent 42%
+    ),
+    radial-gradient(
+      circle at 12% 18%,
+      rgba(20, 90, 120, 0.18),
+      transparent 35%
+    ),
+    hsl(var(--background));
+}
+
+
+/* ═══════════════════════════════════════════════════════════════
+   FORM ELEMENTS
+   ═══════════════════════════════════════════════════════════════ */
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+button:disabled {
+  cursor: not-allowed;
+}
+
+
+/* Remove default textarea resize if you want controlled chat UI */
+textarea {
+  resize: vertical;
+}
+
+
+/* ═══════════════════════════════════════════════════════════════
+   IMAGES
+   ═══════════════════════════════════════════════════════════════ */
+
+img,
+svg,
+video {
+  display: block;
+  max-width: 100%;
+}
+
+img {
+  height: auto;
+}
+
+
+/*
+  Useful for WaveChat avatars/profile images.
+
+  Example:
+
+  <img
+    className="wavechat-avatar"
+    src={user.avatar}
+    alt={user.name}
+  />
+*/
+
+.wavechat-avatar {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+
+/*
+  Prevent broken/oversized media from breaking layouts.
+*/
+
+video {
+  height: auto;
+}
+
+
+/* ═══════════════════════════════════════════════════════════════
+   ACCESSIBILITY
+   ═══════════════════════════════════════════════════════════════ */
+
+:focus-visible {
+  outline: 2px solid hsl(var(--ring));
+  outline-offset: 2px;
+}
+
+
+/* ═══════════════════════════════════════════════════════════════
+   SELECTION
+   ═══════════════════════════════════════════════════════════════ */
+
+::selection {
+  background: hsl(var(--primary) / 0.25);
+  color: hsl(var(--foreground));
+}
+
+
+/* ═══════════════════════════════════════════════════════════════
+   SCROLLBAR
+   ═══════════════════════════════════════════════════════════════ */
+
+/*
+  Chromium / WebKit
+*/
+
+::-webkit-scrollbar {
+  width: 7px;
+  height: 7px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: hsl(var(--muted-foreground) / 0.3);
+  border-radius: 999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: hsl(var(--muted-foreground) / 0.5);
+}
+
+
+/* ═══════════════════════════════════════════════════════════════
+   MOBILE
+   ═══════════════════════════════════════════════════════════════ */
+
+@media (max-width: 767px) {
+  html,
+  body,
+  #root {
+    min-height: 100dvh;
+  }
+
+  body {
+    overflow-x: hidden;
+  }
+}
+
+
+/* ═══════════════════════════════════════════════════════════════
+   REDUCED MOTION
+   ═══════════════════════════════════════════════════════════════ */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

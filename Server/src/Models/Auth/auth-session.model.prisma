@@ -1,23 +1,23 @@
 model AuthSession {
-    id               String    @id @default(uuid()) @db.Uuid
-    userId           String    @db.Uuid
-    sessionId        String    @unique @default(uuid()) @db.Uuid
-    deviceId         String?
-    deviceName       String?
-    userAgent        String?   @db.VarChar(1000)
-    ipAddress        String?
-    refreshTokenHash String    @db.Text
-    expiresAt        DateTime  @db.Timestamptz(3)
-    lastActiveAt     DateTime  @default(now()) @db.Timestamptz(3)
-    isRevoked        Boolean
-    revokedAt        DateTime? @db.Timestamptz(3)
-    createdAt        DateTime  @default(now()) @db.Timestamptz(3)
-    updatedAt        DateTime  @updatedAt @db.Timestamptz(6)
+  id               String    @id @default(uuid()) @db.Uuid
+  userId           String    @db.Uuid
+  sessionId        String    @unique @default(uuid()) @db.Uuid
+  deviceId         String?
+  deviceName       String?
+  userAgent        String?   @db.VarChar(1000)
+  ipAddress        String?
+  refreshTokenHash String    @db.Text
+  expiresAt        DateTime  @db.Timestamptz(3)
+  lastActiveAt     DateTime  @default(now()) @db.Timestamptz(3)
+  isRevoked        Boolean
+  revokedAt        DateTime? @db.Timestamptz(3)
+  createdAt        DateTime  @default(now()) @db.Timestamptz(3)
+  updatedAt        DateTime  @updatedAt @db.Timestamptz(6)
 
-    user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-    @@index([sessionId])
-    @@index([isRevoked])
-    @@index([expiresAt])
-    @@map("auth_sessions")
+  @@index([sessionId])
+  @@index([isRevoked])
+  @@index([expiresAt])
+  @@map("auth_sessions") 
 }

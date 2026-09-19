@@ -1,47 +1,47 @@
 enum ConversationType {
-    PRIVATE @map("private")
-    GROUP   @map("group")
+  PRIVATE @map("private")
+  GROUP   @map("group")
 }
 
 model Conversation {
-    id                    String           @id @default(uuid()) @db.Uuid
-    createdBy             String           @db.Uuid
-    conversationType      ConversationType @default(PRIVATE)
-    privateParticipantKey String?          @unique
-    lastMessageId         String?          @unique @db.Uuid
-    lastMessageAt         DateTime?
-    isDeleted             Boolean          @default(false)
-    createdAt             DateTime         @default(now())
-    updatedAt             DateTime         @updatedAt
+  id                    String           @id @default(uuid()) @db.Uuid
+  createdBy             String           @db.Uuid
+  conversationType      ConversationType @default(PRIVATE)
+  privateParticipantKey String?          @unique
+  lastMessageId         String?          @unique @db.Uuid
+  lastMessageAt         DateTime?
+  isDeleted             Boolean          @default(false)
+  createdAt             DateTime         @default(now())
+  updatedAt             DateTime         @updatedAt
 
-    creator        User                      @relation("ConversationCreator", fields: [createdBy], references: [id], onDelete: Cascade)
-    participants   ConversationParticipant[]
-    lastMessage    Message?                  @relation("LastMessage", fields: [lastMessageId], references: [id], onDelete: SetNull)
-    messages       Message[]                 @relation("ConversationMessages")
-    archives       Archive[]
-    mutes          MuteConversation[]
-    friendRequests FriendRequest[]
-    callLogs       CallLog[]
-    groupChat      GroupChat?
-    reports        Report[]
-    pins           Pinned[]                  @relation("PinnedConversation")
-    mentions       MessageMention[]
+  creator        User                      @relation("ConversationCreator", fields: [createdBy], references: [id], onDelete: Cascade)
+  participants   ConversationParticipant[]
+  lastMessage    Message?                  @relation("LastMessage", fields: [lastMessageId], references: [id], onDelete: SetNull)
+  messages       Message[]                 @relation("ConversationMessages")
+  archives       Archive[]
+  mutes          MuteConversation[]
+  friendRequests FriendRequest[]
+  callLogs       CallLog[]
+  groupChat      GroupChat?
+  reports        Report[]
+  pins           Pinned[]                  @relation("PinnedConversation")
+  mentions       MessageMention[]
 
-    @@index([isDeleted, lastMessageAt(sort: Desc)])
-    @@map("conversations")
+  @@index([isDeleted, lastMessageAt(sort: Desc)])
+  @@map("conversations")
 }
 
 model ConversationParticipant {
-    id             String   @id @default(uuid()) @db.Uuid
-    conversationId String   @db.Uuid
-    userId         String   @db.Uuid
-    createdAt      DateTime @default(now())
-    updatedAt      DateTime @updatedAt
+  id             String   @id @default(uuid()) @db.Uuid
+  conversationId String   @db.Uuid
+  userId         String   @db.Uuid
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
 
-    conversation Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
-    user         User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  conversation Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  user         User         @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-    @@unique([conversationId, userId])
-    @@index([userId, conversationId])
-    @@map("conversation_participants")
+  @@unique([conversationId, userId])
+  @@index([userId, conversationId])
+  @@map("conversation_participants")
 }

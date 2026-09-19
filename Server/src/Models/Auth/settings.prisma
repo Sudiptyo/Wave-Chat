@@ -1,101 +1,101 @@
 enum ProfileVisibility {
-    PUBLIC   @map("public")
-    CONTACTS @map("contacts")
-    PRIVATE  @map("private")
+  PUBLIC   @map("public")
+  CONTACTS @map("contacts")
+  PRIVATE  @map("private")
 }
 
 enum LastSeenVisibility {
-    EVERYONE @map("everyone")
-    CONTACTS @map("contacts")
-    NOBODY   @map("nobody")
+  EVERYONE @map("everyone")
+  CONTACTS @map("contacts")
+  NOBODY   @map("nobody")
 }
 
 enum CallPrivacy {
-    EVERYONE @map("everyone")
-    CONTACTS @map("contacts")
-    NOBODY   @map("nobody")
+  EVERYONE @map("everyone")
+  CONTACTS @map("contacts")
+  NOBODY   @map("nobody")
 }
 
 enum GroupAddPermission {
-    EVERYONE @map("everyone")
-    CONTACTS @map("contacts")
-    NOBODY   @map("nobody")
+  EVERYONE @map("everyone")
+  CONTACTS @map("contacts")
+  NOBODY   @map("nobody")
 }
 
 enum ThemeType {
-    SYSTEM @map("system")
-    LIGHT  @map("light")
-    DARK   @map("dark")
+  SYSTEM @map("system")
+  LIGHT  @map("light")
+  DARK   @map("dark")
 }
 
 enum FontSize {
-    SMALL       @map("small")
-    MEDIUM      @map("medium")
-    LARGE       @map("large")
-    EXTRA_LARGE @map("extra_large")
+  SMALL       @map("small")
+  MEDIUM      @map("medium")
+  LARGE       @map("large")
+  EXTRA_LARGE @map("extra_large")
 }
 
 enum MediaAutoDownload {
-    NEVER           @map("never")
-    WIFI            @map("wifi")
-    WIFI_AND_MOBILE @map("wifi_and_mobile")
+  NEVER           @map("never")
+  WIFI            @map("wifi")
+  WIFI_AND_MOBILE @map("wifi_and_mobile")
 }
 
 enum UploadQuality {
-    STANDARD @map("standard")
-    HD       @map("hd")
+  STANDARD @map("standard")
+  HD       @map("hd")
 }
 
 model UserSettings {
-    id                         String             @id @default(uuid()) @db.Uuid
-    userId                     String             @unique @db.Uuid
-    loginAlerts                Boolean            @default(true)
-    twoFactorAuthentication    Boolean            @default(false)
-    profileVisibility          ProfileVisibility  @default(PUBLIC)
-    lastSeenVisibility         LastSeenVisibility @default(CONTACTS)
-    onlineStatus               Boolean            @default(true)
-    readReceipts               Boolean            @default(true)
-    typingIndicator            Boolean            @default(true)
-    profilePhotoVisibility     ProfileVisibility  @default(CONTACTS)
-    aboutVisibility            ProfileVisibility  @default(CONTACTS)
-    statusVisibility           ProfileVisibility  @default(CONTACTS)
-    callsPrivacy               CallPrivacy        @default(CONTACTS)
-    groupsAddPermission        GroupAddPermission @default(CONTACTS)
-    enterToSend                Boolean            @default(true)
-    sendWithCtrlEnter          Boolean            @default(false)
-    linkPreviews               Boolean            @default(true)
-    saveToGallery              Boolean            @default(true)
-    disappearingMessages       Boolean            @default(false)
-    archiveChats               Boolean            @default(false)
-    theme                      ThemeType          @default(SYSTEM)
-    accentColor                String             @default("#7C3AED")
-    fontSize                   FontSize           @default(MEDIUM)
-    chatWallpaper              String?
-    compactMode                Boolean            @default(false)
-    animations                 Boolean            @default(true)
-    notificationsEnabled       Boolean            @default(true)
-    messageNotifications       Boolean            @default(true)
-    groupNotifications         Boolean            @default(true)
-    friendRequestNotifications Boolean            @default(true)
-    callNotifications          Boolean            @default(true)
-    storyNotifications         Boolean            @default(true)
-    aiNotifications            Boolean            @default(true)
-    sound                      Boolean            @default(true)
-    vibration                  Boolean            @default(true)
-    desktopNotifications       Boolean            @default(true)
-    showPreview                Boolean            @default(true)
-    notificationTone           String?
-    mobileDataAutoDownload     MediaAutoDownload  @default(WIFI)
-    wifiAutoDownload           MediaAutoDownload  @default(WIFI_AND_MOBILE)
-    roamingAutoDownload        MediaAutoDownload  @default(NEVER)
-    uploadQuality              UploadQuality      @default(STANDARD)
-    downloadMediaAutomatically Boolean            @default(true)
-    language                   String             @default("en")
-    translationEnabled         Boolean            @default(false)
-    createdAt                  DateTime           @default(now())
-    updatedAt                  DateTime           @updatedAt
+  id                         String             @id @default(uuid()) @db.Uuid
+  userId                     String             @unique @db.Uuid
+  loginAlerts                Boolean            @default(true)
+  twoFactorAuthentication    Boolean            @default(false)
+  profileVisibility          ProfileVisibility  @default(PUBLIC)
+  lastSeenVisibility         LastSeenVisibility @default(CONTACTS)
+  onlineStatus               Boolean            @default(true)
+  readReceipts               Boolean            @default(true)
+  typingIndicator            Boolean            @default(true)
+  profilePhotoVisibility     ProfileVisibility  @default(CONTACTS)
+  aboutVisibility            ProfileVisibility  @default(CONTACTS)
+  statusVisibility           ProfileVisibility  @default(CONTACTS)
+  callsPrivacy               CallPrivacy        @default(CONTACTS)
+  groupsAddPermission        GroupAddPermission @default(CONTACTS)
+  enterToSend                Boolean            @default(true)
+  sendWithCtrlEnter          Boolean            @default(false)
+  linkPreviews               Boolean            @default(true)
+  saveToGallery              Boolean            @default(true)
+  disappearingMessages       Boolean            @default(false)
+  archiveChats               Boolean            @default(false)
+  theme                      ThemeType          @default(SYSTEM)
+  accentColor                String             @default("#7C3AED")
+  fontSize                   FontSize           @default(MEDIUM)
+  chatWallpaper              String?
+  compactMode                Boolean            @default(false)
+  animations                 Boolean            @default(true)
+  notificationsEnabled       Boolean            @default(true)
+  messageNotifications       Boolean            @default(true)
+  groupNotifications         Boolean            @default(true)
+  friendRequestNotifications Boolean            @default(true)
+  callNotifications          Boolean            @default(true)
+  storyNotifications         Boolean            @default(true)
+  aiNotifications            Boolean            @default(true)
+  sound                      Boolean            @default(true)
+  vibration                  Boolean            @default(true)
+  desktopNotifications       Boolean            @default(true)
+  showPreview                Boolean            @default(true)
+  notificationTone           String?
+  mobileDataAutoDownload     MediaAutoDownload  @default(WIFI)
+  wifiAutoDownload           MediaAutoDownload  @default(WIFI_AND_MOBILE)
+  roamingAutoDownload        MediaAutoDownload  @default(NEVER)
+  uploadQuality              UploadQuality      @default(STANDARD)
+  downloadMediaAutomatically Boolean            @default(true)
+  language                   String             @default("en")
+  translationEnabled         Boolean            @default(false)
+  createdAt                  DateTime           @default(now())
+  updatedAt                  DateTime           @updatedAt
 
-    user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-    @@map("user_settings")
+  @@map("user_settings")
 }

@@ -1,17 +1,17 @@
 model MessageMention {
-    id             String   @id @default(uuid()) @db.Uuid
-    conversationId String   @db.Uuid
-    messageId      String   @db.Uuid
-    userId         String   @db.Uuid
-    createdAt      DateTime @default(now())
-    updatedAt      DateTime @updatedAt
+  id             String   @id @default(uuid()) @db.Uuid
+  conversationId String   @db.Uuid
+  messageId      String   @db.Uuid
+  userId         String   @db.Uuid
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
 
-    conversation Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
-    message      Message      @relation(fields: [messageId], references: [id], onDelete: Cascade)
-    user         User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  conversation Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  message      Message      @relation(fields: [messageId], references: [id], onDelete: Cascade)
+  user         User         @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-    @@unique([messageId, userId])
-    @@index([conversationId, messageId])
-    @@index([userId, createdAt(sort: Desc)])
-    @@map("message_mentions")
+  @@unique([messageId, userId])
+  @@index([conversationId, messageId])
+  @@index([userId, createdAt(sort: Desc)])
+  @@map("message_mentions")
 }

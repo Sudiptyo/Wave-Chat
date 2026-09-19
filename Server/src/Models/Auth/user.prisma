@@ -1,66 +1,81 @@
 enum UserRole {
-    ADMIN @map("admin")
-    USER  @map("user")
+  ADMIN @map("admin")
+  USER  @map("user")
 }
 
 enum UserStatus {
-    ACTIVE    @map("active")
-    INACTIVE  @map("inactive")
-    SUSPENDED @map("suspended")
+  ACTIVE    @map("active")
+  INACTIVE  @map("inactive")
+  SUSPENDED @map("suspended")
+}
+
+enum AuthProvider {
+  LOCAL  @map("local")
+  GOOGLE @map("google")
 }
 
 model User {
-    id            String     @id @default(uuid()) @db.Uuid
-    avatar        String?
-    fullName      String
-    userName      String     @unique @db.VarChar(100)
-    mobileNo      String     @unique @db.VarChar(15)
-    password      String     @db.VarChar(255)
-    role          UserRole   @default(USER)
-    about         String?
-    email         String?    @unique
-    emailVerified Boolean    @default(false)
-    status        UserStatus @default(INACTIVE)
-    lastSeen      DateTime   @default(now())
-    credits       Int        @default(100)
-    createdAt     DateTime   @default(now())
-    updatedAt     DateTime   @updatedAt
+  id       String  @id @default(uuid()) @db.Uuid
+  avatar   String?
+  fullName String  @db.VarChar(50)
+  userName String  @unique @db.VarChar(20)
 
-    settings               UserSettings?
-    aiChats                AiChat[]
-    subscriptions          AiSubscription[]
-    blockedUsers           Block[]                   @relation("Blocker")
-    blockedByUsers         Block[]                   @relation("Blocked")
-    reportsMade            Report[]                  @relation("Reporter")
-    reportsReceived        Report[]                  @relation("ReportedUser")
-    contacts               Contact[]                 @relation("ContactOwner")
-    contactedBy            Contact[]                 @relation("ContactedUser")
-    createdConversations   Conversation[]            @relation("ConversationCreator")
-    conversationMembers    ConversationParticipant[]
-    archivedConversations  Archive[]
-    mutedConversations     MuteConversation[]
-    sentFriendRequests     FriendRequest[]           @relation("FriendRequestSender")
-    receivedFriendRequests FriendRequest[]           @relation("FriendRequestReceiver")
-    callLogsAsCaller       CallLog[]                 @relation("Caller")
-    callLogsAsReceiver     CallLog[]                 @relation("Receiver")
-    groupChatsCreated      GroupChat[]               @relation("GroupCreator")
-    groupMemberships       GroupMember[]             @relation("GroupMemberUser")
-    groupInvitesSent       GroupInvite[]             @relation("GroupInviteSender")
-    groupInvitesReceived   GroupInvite[]             @relation("GroupInviteReceiver")
-    groupJoinRequests      GroupJoinRequest[]        @relation("JoinRequestUser")
-    bannedGroupMembers     GroupMember[]             @relation("BannedBy")
-    messagesSent           Message[]                 @relation("MessageSender")
-    reactions              Reaction[]
-    messageStatuses        MessageStatus[]
-    mentions               MessageMention[]
-    pins                   Pinned[]
-    sentNotifications      Notification[]            @relation("NotificationSender")
-    receivedNotifications  Notification[]            @relation("NotificationReceiver")
-    stories                Story[]
-    storyViews             StoryView[]               @relation("StoryViewer")
-    storyExcludedUsers     StoryExcludedUser[]
-    storyAllowedUsers      StoryAllowedUser[]
+  // Local users get these during registration.
+  // Google users can add them later from profile.
+  mobileNo String? @unique @db.VarChar(15)
+  password String? @db.VarChar(255)
 
-    @@index([lastSeen])
-    @@map("users")
+  role          UserRole @default(USER)
+  about         String? @default("Hey ! I'm using WaveChat")
+  email         String?  @unique
+  emailVerified Boolean  @default(false)
+
+  authProvider AuthProvider @default(LOCAL)
+  googleId     String?      @unique
+
+  status      UserStatus @default(INACTIVE)
+  lastLoginAt DateTime   @default(now())
+  lastSeen    DateTime   @default(now())
+  credits     Int        @default(100)
+  createdAt   DateTime   @default(now()) @db.Timestamptz(3)
+  updatedAt   DateTime   @updatedAt @db.Timestamptz(6)
+
+  authSessions           AuthSession[]
+  settings               UserSettings?
+  aiChats                AiChat[]
+  subscriptions          AiSubscription[]
+  blockedUsers           Block[]                   @relation("Blocker")
+  blockedByUsers         Block[]                   @relation("Blocked")
+  reportsMade            Report[]                  @relation("Reporter")
+  reportsReceived        Report[]                  @relation("ReportedUser")
+  contacts               Contact[]                 @relation("ContactOwner")
+  contactedBy            Contact[]                 @relation("ContactedUser")
+  createdConversations   Conversation[]            @relation("ConversationCreator")
+  conversationMembers    ConversationParticipant[]
+  archivedConversations  Archive[]
+  mutedConversations     MuteConversation[]
+  sentFriendRequests     FriendRequest[]           @relation("FriendRequestSender")
+  receivedFriendRequests FriendRequest[]           @relation("FriendRequestReceiver")
+  callLogsAsCaller       CallLog[]                 @relation("Caller")
+  callLogsAsReceiver     CallLog[]                 @relation("Receiver")
+  groupChatsCreated      GroupChat[]               @relation("GroupCreator")
+  groupMemberships       GroupMember[]             @relation("GroupMemberUser")
+  groupInvitesSent       GroupInvite[]             @relation("GroupInviteSender")
+  groupInvitesReceived   GroupInvite[]             @relation("GroupInviteReceiver")
+  groupJoinRequests      GroupJoinRequest[]        @relation("JoinRequestUser")
+  bannedGroupMembers     GroupMember[]             @relation("BannedBy")
+  messagesSent           Message[]                 @relation("MessageSender")
+  reactions              Reaction[]
+  messageStatuses        MessageStatus[]
+  mentions               MessageMention[]
+  pins                   Pinned[]
+  sentNotifications      Notification[]            @relation("NotificationSender")
+  receivedNotifications  Notification[]            @relation("NotificationReceiver")
+  stories                Story[]
+  storyViews             StoryView[]               @relation("StoryViewer")
+  storyExcludedUsers     StoryExcludedUser[]
+  storyAllowedUsers      StoryAllowedUser[]
+
+  @@index([lastSeen])
+  @@map("users")
 }

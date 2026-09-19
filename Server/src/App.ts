@@ -10,10 +10,22 @@ import { COOKIE_SECRET, CORS_ORIGIN, ENV, LOGGER } from "./Config/Dotenv.js";
 import { ZodTypeProvider, serializerCompiler, validatorCompiler, hasZodFastifySchemaValidationErrors } from "fastify-type-provider-zod"
 import { ZodError } from 'zod';
 import { ApiError } from "./Config/Error.js";
+import userRoutes from "./Routes/Auth/user.route.js";
+import { swaggerPlugin } from "./Plugins/swagger.plugin.js";
+import googleRoutes from "./Routes/Auth/google.route.js";
 
 const app = fastify({
   logger: {
     level: LOGGER,
+    transport: {
+      target: "pino-pretty",
+      options: {
+        colorize: true,
+        translateTime: "SYS:standard",
+        ignore: "pid,hostname",
+        singleLine: true
+      }
+    },
     redact: [
       "req.headers.authorization",
       "req.headers.cookie",
@@ -91,6 +103,16 @@ app.setErrorHandler((err, request, reply) => {
 
   throw new ApiError(500, "Internal Server Error", false);
 });
+
+await app.register(swaggerPlugin);
+
+app.register(userRoutes, {
+  prefix: "/api/v1/auth"
+})
+
+app.register(googleRoutes, {
+  prefix: "/api/v1/auth"
+})
 
 // 404 middleware
 app.setNotFoundHandler((_request, reply) => {

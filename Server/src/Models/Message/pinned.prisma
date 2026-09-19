@@ -1,28 +1,28 @@
 enum PinnedType {
-    HOURS_24 @map("24hours")
-    HOURS_48 @map("48hours")
-    ALWAYS   @map("always")
-    CUSTOM   @map("custom")
+  HOURS_24 @map("24hours")
+  HOURS_48 @map("48hours")
+  ALWAYS   @map("always")
+  CUSTOM   @map("custom")
 }
 
 model Pinned {
-    id             String     @id @default(uuid()) @db.Uuid
-    pinnedBy       String     @db.Uuid
-    conversationId String?    @db.Uuid
-    messageId      String?    @db.Uuid
-    pinnedType     PinnedType @default(HOURS_24)
-    pinnedAt       DateTime   @default(now())
-    expireAt       DateTime?
-    createdAt      DateTime   @default(now())
-    updatedAt      DateTime   @updatedAt
+  id             String     @id @default(uuid()) @db.Uuid
+  pinnedBy       String     @db.Uuid
+  conversationId String?    @db.Uuid
+  messageId      String?    @db.Uuid
+  pinnedType     PinnedType @default(HOURS_24)
+  pinnedAt       DateTime   @default(now())
+  expireAt       DateTime?
+  createdAt      DateTime   @default(now())
+  updatedAt      DateTime   @updatedAt
 
-    user         User          @relation(fields: [pinnedBy], references: [id], onDelete: Cascade)
-    conversation Conversation? @relation("PinnedConversation", fields: [conversationId], references: [id], onDelete: Cascade)
-    message      Message?      @relation("PinnedMessage", fields: [messageId], references: [id], onDelete: Cascade)
+  user         User          @relation(fields: [pinnedBy], references: [id], onDelete: Cascade)
+  conversation Conversation? @relation("PinnedConversation", fields: [conversationId], references: [id], onDelete: Cascade)
+  message      Message?      @relation("PinnedMessage", fields: [messageId], references: [id], onDelete: Cascade)
 
-    @@index([conversationId, pinnedAt(sort: Desc)])
-    @@index([pinnedBy, conversationId])
-    @@index([pinnedBy, messageId])
-    @@index([expireAt])
-    @@map("pinned_items")
+  @@index([conversationId, pinnedAt(sort: Desc)])
+  @@index([pinnedBy, conversationId])
+  @@index([pinnedBy, messageId])
+  @@index([expireAt])
+  @@map("pinned_items")
 }

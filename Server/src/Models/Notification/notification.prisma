@@ -1,36 +1,36 @@
 enum NotificationType {
-    FRIEND_REQUEST @map("friend_request")
-    MESSAGE        @map("message")
-    MENTION        @map("mention")
-    CALL           @map("call")
-    GROUP_INVITE   @map("group_invite")
+  FRIEND_REQUEST @map("friend_request")
+  MESSAGE        @map("message")
+  MENTION        @map("mention")
+  CALL           @map("call")
+  GROUP_INVITE   @map("group_invite")
 }
 
 enum NotificationReferenceType {
-    FRIEND_REQUEST @map("friend_request")
-    GROUP_INVITE   @map("group_invite")
-    MESSAGE        @map("message")
-    CALL           @map("call")
-    CONVERSATION   @map("conversation")
+  FRIEND_REQUEST @map("friend_request")
+  GROUP_INVITE   @map("group_invite")
+  MESSAGE        @map("message")
+  CALL           @map("call")
+  CONVERSATION   @map("conversation")
 }
 
 model Notification {
-    id                    String                    @id @default(uuid()) @db.Uuid
-    senderId              String?                   @db.Uuid
-    receiverId            String                    @db.Uuid
-    notificationType      NotificationType
-    referenceId           String                    @db.Uuid
-    referenceType         NotificationReferenceType
-    isRead                Boolean                   @default(false)
-    notificationExpiresAt DateTime?
-    createdAt             DateTime                  @default(now())
-    updatedAt             DateTime                  @updatedAt
+  id                    String                    @id @default(uuid()) @db.Uuid
+  senderId              String?                   @db.Uuid
+  receiverId            String                    @db.Uuid
+  notificationType      NotificationType
+  referenceId           String                    @db.Uuid
+  referenceType         NotificationReferenceType
+  isRead                Boolean                   @default(false)
+  notificationExpiresAt DateTime?
+  createdAt             DateTime                  @default(now())
+  updatedAt             DateTime                  @updatedAt
 
-    sender   User? @relation("NotificationSender", fields: [senderId], references: [id], onDelete: SetNull)
-    receiver User  @relation("NotificationReceiver", fields: [receiverId], references: [id], onDelete: Cascade)
+  sender   User? @relation("NotificationSender", fields: [senderId], references: [id], onDelete: SetNull)
+  receiver User  @relation("NotificationReceiver", fields: [receiverId], references: [id], onDelete: Cascade)
 
-    @@index([receiverId, isRead, createdAt(sort: Desc)])
-    @@index([receiverId, createdAt(sort: Desc)])
-    @@index([notificationExpiresAt])
-    @@map("notifications")
+  @@index([receiverId, isRead, createdAt(sort: Desc)])
+  @@index([receiverId, createdAt(sort: Desc)])
+  @@index([notificationExpiresAt])
+  @@map("notifications")
 }

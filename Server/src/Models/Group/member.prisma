@@ -1,38 +1,38 @@
 enum GroupMemberRole {
-    MEMBER @map("member")
-    ADMIN  @map("admin")
-    OWNER  @map("owner")
+  MEMBER @map("member")
+  ADMIN  @map("admin")
+  OWNER  @map("owner")
 }
 
 enum GroupMemberStatus {
-    ACTIVE  @map("active")
-    BANNED  @map("banned")
-    LEFT    @map("left")
-    REMOVED @map("removed")
+  ACTIVE  @map("active")
+  BANNED  @map("banned")
+  LEFT    @map("left")
+  REMOVED @map("removed")
 }
 
 model GroupMember {
-    id        String            @id @default(uuid()) @db.Uuid
-    groupId   String            @db.Uuid
-    userId    String            @db.Uuid
-    role      GroupMemberRole   @default(MEMBER)
-    status    GroupMemberStatus @default(ACTIVE)
-    nickname  String?           @db.VarChar(50)
-    bannedAt  DateTime?
-    bannedBy  String?           @db.Uuid
-    banReason String?           @db.VarChar(500)
-    joinedAt  DateTime          @default(now())
-    leftAt    DateTime?
-    createdAt DateTime          @default(now())
-    updatedAt DateTime          @updatedAt
+  id        String            @id @default(uuid()) @db.Uuid
+  groupId   String            @db.Uuid
+  userId    String            @db.Uuid
+  role      GroupMemberRole   @default(MEMBER)
+  status    GroupMemberStatus @default(ACTIVE)
+  nickname  String?           @db.VarChar(50)
+  bannedAt  DateTime?
+  bannedBy  String?           @db.Uuid
+  banReason String?           @db.VarChar(500)
+  joinedAt  DateTime          @default(now())
+  leftAt    DateTime?
+  createdAt DateTime          @default(now())
+  updatedAt DateTime          @updatedAt
 
-    group        GroupChat @relation(fields: [groupId], references: [id], onDelete: Cascade)
-    user         User      @relation("GroupMemberUser", fields: [userId], references: [id], onDelete: Cascade)
-    bannedByUser User?     @relation("BannedBy", fields: [bannedBy], references: [id], onDelete: SetNull)
+  group        GroupChat @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  user         User      @relation("GroupMemberUser", fields: [userId], references: [id], onDelete: Cascade)
+  bannedByUser User?     @relation("BannedBy", fields: [bannedBy], references: [id], onDelete: SetNull)
 
-    @@unique([groupId, userId])
-    @@index([groupId, status])
-    @@index([userId, status])
-    @@index([groupId, role])
-    @@map("group_members")
+  @@unique([groupId, userId])
+  @@index([groupId, status])
+  @@index([userId, status])
+  @@index([groupId, role])
+  @@map("group_members")
 }

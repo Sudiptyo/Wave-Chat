@@ -1,24 +1,24 @@
 enum MuteType {
-    HOURS_24 @map("24hours")
-    HOURS_48 @map("48hours")
-    ALWAYS   @map("always")
-    CUSTOM   @map("custom")
+  HOURS_24 @map("24hours")
+  HOURS_48 @map("48hours")
+  ALWAYS   @map("always")
+  CUSTOM   @map("custom")
 }
 
 model MuteConversation {
-    id             String    @id @default(uuid()) @db.Uuid
-    userId         String    @db.Uuid
-    conversationId String    @db.Uuid
-    muteType       MuteType  @default(HOURS_24)
-    muteUntil      DateTime?
-    createdAt      DateTime  @default(now())
-    updatedAt      DateTime  @updatedAt
+  id             String    @id @default(uuid()) @db.Uuid
+  userId         String    @db.Uuid
+  conversationId String    @db.Uuid
+  muteType       MuteType  @default(HOURS_24)
+  muteUntil      DateTime?
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
 
-    user         User         @relation(fields: [userId], references: [id], onDelete: Cascade)
-    conversation Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  user         User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  conversation Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
 
-    @@unique([userId, conversationId])
-    @@index([userId, muteUntil])
-    @@index([muteUntil])
-    @@map("conversation_mutes")
+  @@unique([userId, conversationId])
+  @@index([userId, muteUntil])
+  @@index([muteUntil])
+  @@map("conversation_mutes")
 }
