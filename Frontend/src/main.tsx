@@ -8,6 +8,7 @@ import { Provider } from "react-redux";
 import { store } from "./Store/store.ts";
 import { ToastContainer } from "react-toastify";
 import ThemeProvider from "./Components/Provider/ThemeProvider.tsx";
+import "./testAuth.ts";
 
 const queryClient = new QueryClient();
 
@@ -22,10 +23,10 @@ createRoot(document.getElementById("root")!).render(
             autoClose={3000}
             pauseOnHover
             newestOnTop
-            closeOnClick
+            closeOnClick 
             theme="dark"
           />
-          <App />
+          <App /> 
         </ThemeProvider>
       </Provider>
     </QueryClientProvider>
