@@ -13,6 +13,10 @@ import { ApiError } from "./Config/Error.js";
 import userRoutes from "./Routes/Auth/user.route.js";
 import { swaggerPlugin } from "./Plugins/swagger.plugin.js";
 import googleRoutes from "./Routes/Auth/google.route.js";
+import { Server } from "socket.io";
+import { initializeSocket } from "./Socket/index.js";
+import conversationRoutes from "./Routes/Conversations/conversation.route.js";
+import friendRequestRoutes from "./Routes/Friend Request/request.route.js";
 
 const app = fastify({
   logger: {
@@ -36,6 +40,9 @@ const app = fastify({
   requestIdHeader: "x-request-id",
   genReqId: () => crypto.randomUUID(),
 }).withTypeProvider<ZodTypeProvider>();
+
+// const server = new Server(app);
+const io = initializeSocket(app.server);
 
 await app.register(cors, {
   origin: CORS_ORIGIN,
@@ -112,6 +119,14 @@ app.register(userRoutes, {
 
 app.register(googleRoutes, {
   prefix: "/api/v1/auth"
+})
+
+app.register(conversationRoutes, {
+  prefix: "/api/v1/conversations"
+})
+
+app.register(friendRequestRoutes, {
+  prefix: "/api/v1/friend"
 })
 
 // 404 middleware

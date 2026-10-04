@@ -19,5 +19,5 @@ model AuthSession {
   @@index([sessionId])
   @@index([isRevoked])
   @@index([expiresAt])
-  @@map("auth_sessions") 
+  @@map("auth_sessions")
 }

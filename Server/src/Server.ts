@@ -9,7 +9,7 @@ const startServer = async () => {
     await connectDb();
     await app.ready();
 
-    app.listen({ port: PORT });
+    await app.listen({ port: PORT });
     app.log.info("PostgreSQL + Prisma initialized");
   } catch (err: unknown) {
     if (err instanceof Error) {

@@ -6,6 +6,7 @@ enum ConversationType {
 model Conversation {
   id                    String           @id @default(uuid()) @db.Uuid
   createdBy             String           @db.Uuid
+  name                  String           @db.VarChar(100)
   conversationType      ConversationType @default(PRIVATE)
   privateParticipantKey String?          @unique
   lastMessageId         String?          @unique @db.Uuid

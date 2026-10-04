@@ -12,6 +12,7 @@ model FriendRequest {
   message        String              @default("Hey 👋 I'd like to connect with you on WaveChat") @db.VarChar(500)
   status         FriendRequestStatus @default(PENDING)
   respondedAt    DateTime?
+  expiresAt      DateTime
   createdAt      DateTime            @default(now())
   updatedAt      DateTime            @updatedAt
 

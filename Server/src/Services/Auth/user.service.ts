@@ -203,7 +203,7 @@ const registerUserService = async (
             );
         }
 
-
+ 
         const passwordHash =
             await bcrypt.hash(password, 12);
 
@@ -211,7 +211,6 @@ const registerUserService = async (
         const user = await prisma.user.create({
 
             data: {
-
                 fullName,
                 userName,
                 mobileNo,
@@ -324,7 +323,6 @@ const loginUserService = async (
                     : {
                         mobileNo: normalizedIdentifier
                     },
-
             });
 
 

@@ -2,12 +2,10 @@ import z from "zod"
 
 const mobileNumberSchema = z
     .string()
-    .trim()
     .regex(
-        /^\+?[1-9]\d{9,14}$/,
-        "Please enter a valid mobile number"
+        /^[6-9]\d{9}$/,
+        "Mobile number must be a valid 10-digit number",
     );
-
 
 const passwordSchema = z
     .string()

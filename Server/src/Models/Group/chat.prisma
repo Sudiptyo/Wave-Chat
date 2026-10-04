@@ -3,7 +3,6 @@ model GroupChat {
   conversationId          String   @unique @db.Uuid
   createdBy               String   @db.Uuid
   avatar                  String?
-  groupName               String
   description             String?
   memberCount             Int      @default(1)
   isPrivate               Boolean  @default(true)
@@ -24,7 +23,6 @@ model GroupChat {
   reports      Report[]
 
   @@index([createdBy])
-  @@index([groupName])
   @@index([isDeleted, createdAt(sort: Desc)])
   @@map("group_chats")
 }

@@ -1,0 +1,519 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+@custom-variant dark (&:is(.dark *));
+
+/* ═══════════════════════════════════════════════════════════════
+   WAVECHAT THEME
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ───────────────────────────────────────────────────────────────
+   Tailwind v4 Theme
+   ─────────────────────────────────────────────────────────────── */
+
+@theme inline {
+  --color-background: hsl(var(--background));
+  --color-foreground: hsl(var(--foreground));
+
+  --color-card: hsl(var(--card));
+  --color-card-foreground: hsl(var(--card-foreground));
+
+  --color-popover: hsl(var(--popover));
+  --color-popover-foreground: hsl(var(--popover-foreground));
+
+  --color-primary: hsl(var(--primary));
+  --color-primary-foreground: hsl(var(--primary-foreground));
+
+  --color-secondary: hsl(var(--secondary));
+  --color-secondary-foreground: hsl(var(--secondary-foreground));
+
+  --color-muted: hsl(var(--muted));
+  --color-muted-foreground: hsl(var(--muted-foreground));
+
+  --color-accent: hsl(var(--accent));
+  --color-accent-foreground: hsl(var(--accent-foreground));
+
+  --color-destructive: hsl(var(--destructive));
+  --color-destructive-foreground: hsl(var(--destructive-foreground));
+
+  --color-border: hsl(var(--border));
+  --color-input: hsl(var(--input));
+  --color-ring: hsl(var(--ring));
+
+  --font-sans: var(--font-sans);
+  --font-mono: Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+  --font-heading: var(--font-sans);
+
+  --radius-sm: calc(var(--radius) - 0.25rem);
+  --radius-md: calc(var(--radius) - 0.125rem);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 0.25rem);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
+
+  /* Shadcn sidebar */
+  --color-sidebar: hsl(var(--sidebar));
+  --color-sidebar-foreground: hsl(var(--sidebar-foreground));
+  --color-sidebar-primary: hsl(var(--sidebar-primary));
+  --color-sidebar-primary-foreground: hsl(var(--sidebar-primary-foreground));
+  --color-sidebar-accent: hsl(var(--sidebar-accent));
+  --color-sidebar-accent-foreground: hsl(var(--sidebar-accent-foreground));
+  --color-sidebar-border: hsl(var(--sidebar-border));
+  --color-sidebar-ring: hsl(var(--sidebar-ring));
+
+  /* Shadcn charts */
+  --color-chart-1: hsl(var(--chart-1));
+  --color-chart-2: hsl(var(--chart-2));
+  --color-chart-3: hsl(var(--chart-3));
+  --color-chart-4: hsl(var(--chart-4));
+  --color-chart-5: hsl(var(--chart-5));
+}
+
+/* ───────────────────────────────────────────────────────────────
+   Light Theme
+   ─────────────────────────────────────────────────────────────── */
+
+:root {
+  color-scheme: light;
+
+  /* Base */
+  --background: 150 20% 97%;
+  --foreground: 170 45% 10%;
+
+  /* Surfaces */
+  --card: 0 0% 100%;
+  --card-foreground: 170 45% 10%;
+
+  --popover: 0 0% 100%;
+  --popover-foreground: 170 45% 10%;
+
+  /* Brand */
+  --primary: 164 58% 43%;
+  --primary-foreground: 0 0% 100%;
+
+  /* Secondary */
+  --secondary: 165 20% 93%;
+  --secondary-foreground: 170 40% 14%;
+
+  /* Muted */
+  --muted: 160 15% 93%;
+  --muted-foreground: 170 10% 45%;
+
+  /* Accent */
+  --accent: 164 58% 43%;
+  --accent-foreground: 0 0% 100%;
+
+  /* Feedback */
+  --destructive: 0 72% 55%;
+  --destructive-foreground: 0 0% 100%;
+
+  /* UI */
+  --border: 165 15% 85%;
+  --input: 165 15% 85%;
+  --ring: 164 58% 43%;
+
+  /* Layout */
+  --radius: 0.75rem;
+
+  /* Typography */
+  --font-sans: "Manrope", system-ui, sans-serif;
+  --font-mono: Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+
+  /* Shadcn Sidebar */
+  --sidebar: 0 0% 100%;
+  --sidebar-foreground: 170 45% 10%;
+  --sidebar-primary: 164 58% 43%;
+  --sidebar-primary-foreground: 0 0% 100%;
+  --sidebar-accent: 165 20% 93%;
+  --sidebar-accent-foreground: 170 40% 14%;
+  --sidebar-border: 165 15% 85%;
+  --sidebar-ring: 164 58% 43%;
+
+  /* Shadcn Charts */
+  --chart-1: 164 58% 43%;
+  --chart-2: 180 45% 45%;
+  --chart-3: 145 45% 45%;
+  --chart-4: 200 55% 50%;
+  --chart-5: 35 70% 50%;
+}
+
+/* ───────────────────────────────────────────────────────────────
+   Dark Theme
+   Add .dark to <html>
+   ─────────────────────────────────────────────────────────────── */
+
+.dark {
+  color-scheme: dark;
+
+  /* Base */
+  --background: 207 63% 8%;
+  --foreground: 210 25% 96%;
+
+  /* Surfaces */
+  --card: 207 50% 11%;
+  --card-foreground: 210 25% 96%;
+
+  --popover: 207 50% 11%;
+  --popover-foreground: 210 25% 96%;
+
+  /* Brand */
+  --primary: 164 58% 55%;
+  --primary-foreground: 207 63% 8%;
+
+  /* Secondary */
+  --secondary: 207 35% 17%;
+  --secondary-foreground: 210 25% 96%;
+
+  /* Muted */
+  --muted: 207 30% 16%;
+  --muted-foreground: 210 12% 65%;
+
+  /* Accent */
+  --accent: 164 58% 55%;
+  --accent-foreground: 207 63% 8%;
+
+  /* Feedback */
+  --destructive: 0 65% 52%;
+  --destructive-foreground: 0 0% 100%;
+
+  /* UI */
+  --border: 207 30% 23%;
+  --input: 207 30% 23%;
+  --ring: 164 58% 55%;
+
+  /* Shadcn Sidebar */
+  --sidebar: 207 50% 11%;
+  --sidebar-foreground: 210 25% 96%;
+  --sidebar-primary: 164 58% 55%;
+  --sidebar-primary-foreground: 207 63% 8%;
+  --sidebar-accent: 207 35% 17%;
+  --sidebar-accent-foreground: 210 25% 96%;
+  --sidebar-border: 207 30% 23%;
+  --sidebar-ring: 164 58% 55%;
+
+  /* Shadcn Charts */
+  --chart-1: 164 58% 55%;
+  --chart-2: 180 50% 55%;
+  --chart-3: 145 50% 55%;
+  --chart-4: 200 60% 60%;
+  --chart-5: 35 75% 55%;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   GLOBAL RESET
+   ═══════════════════════════════════════════════════════════════ */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  border-color: hsl(var(--border));
+}
+
+html {
+  min-height: 100%;
+  font-family: var(--font-sans);
+
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  margin: 0;
+  min-height: 100dvh;
+
+  font-family: var(--font-sans);
+  font-weight: 400;
+
+  color: hsl(var(--foreground));
+
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  overflow-x: hidden;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   WAVECHAT GLOBAL BACKGROUND
+   ═══════════════════════════════════════════════════════════════ */
+
+body {
+  background:
+    radial-gradient(
+      circle at 88% 0%,
+      rgba(75, 170, 160, 0.16),
+      transparent 38%
+    ),
+    radial-gradient(
+      circle at 8% 20%,
+      rgba(100, 180, 170, 0.08),
+      transparent 32%
+    ),
+    hsl(var(--background));
+}
+
+.dark body {
+  background:
+    radial-gradient(
+      circle at 88% 0%,
+      rgba(43, 135, 165, 0.35),
+      transparent 42%
+    ),
+    radial-gradient(
+      circle at 12% 18%,
+      rgba(20, 90, 120, 0.18),
+      transparent 35%
+    ),
+    hsl(var(--background));
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   FORM ELEMENTS
+   ═══════════════════════════════════════════════════════════════ */
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+button:disabled {
+  cursor: not-allowed;
+}
+
+textarea {
+  resize: vertical;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   IMAGES
+   ═══════════════════════════════════════════════════════════════ */
+
+img,
+svg,
+video {
+  display: block;
+  max-width: 100%;
+}
+
+img {
+  height: auto;
+}
+
+.wavechat-avatar {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+video {
+  height: auto;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   ACCESSIBILITY
+   ═══════════════════════════════════════════════════════════════ */
+
+:focus-visible {
+  outline: 2px solid hsl(var(--ring));
+  outline-offset: 2px;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   SELECTION
+   ═══════════════════════════════════════════════════════════════ */
+
+::selection {
+  background: hsl(var(--primary) / 0.25);
+  color: hsl(var(--foreground));
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   SCROLLBAR
+   ═══════════════════════════════════════════════════════════════ */
+
+::-webkit-scrollbar {
+  width: 7px;
+  height: 7px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: hsl(var(--muted-foreground) / 0.3);
+  border-radius: 999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: hsl(var(--muted-foreground) / 0.5);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   MOBILE
+   ═══════════════════════════════════════════════════════════════ */
+
+@media (max-width: 767px) {
+  html,
+  body {
+    min-height: 100dvh;
+  }
+
+  body {
+    overflow-x: hidden;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   REDUCED MOTION
+   ═══════════════════════════════════════════════════════════════ */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   SHADCN / TAILWIND BASE
+   ═══════════════════════════════════════════════════════════════ */
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+  }
+
+  html {
+    @apply font-sans;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   AUTH TABS
+   ═══════════════════════════════════════════════════════════════ */
+
+.auth-tabs-list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+
+  width: 100%;
+  height: 44px;
+
+  padding: 4px;
+
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  border-radius: 13px;
+
+  background: #203944;
+
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.02);
+}
+
+.auth-tab {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 100%;
+  height: 100%;
+
+  border: 0;
+  border-radius: 9px;
+
+  background: transparent !important;
+  color: rgba(255, 255, 255, 0.55) !important;
+
+  font-size: 12px;
+  font-weight: 600;
+
+  transition:
+    background-color 180ms ease,
+    color 180ms ease,
+    box-shadow 180ms ease;
+}
+
+.auth-tab:hover {
+  color: rgba(255, 255, 255, 0.75) !important;
+}
+
+.auth-tab-active {
+  background: #72d2ad !important;
+  color: #09251f !important;
+
+  box-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.12),
+    0 0 0 1px rgba(114, 210, 173, 0.08);
+}
+
+.auth-tab:focus-visible {
+  outline: none;
+}
+
+.wc-rail {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  padding: 16px 10px;
+  gap: 12px;
+}
+
+.wc-rail,
+.wc-list,
+.wc-chat,
+.wc-card,
+.wc-overlay {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  backdrop-filter: blur(22px);
+  box-shadow: 0 14px 40px rgba(1, 62, 55, 0.08);
+  border-radius: 24px;
+}
+
+.wc-icon-btn {
+  border: 0;
+  background: transparent;
+  color: var(--muted);
+  width: 40px;
+  height: 40px;
+  border-radius: 13px;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.wc-icon-btn:hover,
+.wc-icon-btn.active {
+  background: var(--gold);
+  color: var(--ink);
+  transform: translateY(-1px);
+}
+
+.dark .wc-icon-btn:hover,
+.dark .wc-icon-btn.active {
+  background: #3a896f;
+  color: #f7f4ed;
+}

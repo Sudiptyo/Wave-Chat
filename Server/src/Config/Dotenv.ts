@@ -1,6 +1,6 @@
 import { StringValue } from "ms";
 
-const PORT = Number(process.env.PORT ?? 3000);
+const PORT = Number(process.env.PORT ?? 5000);
 
 if (Number.isNaN(PORT)) {
     throw new Error("Invalid PORT is defined");
@@ -8,7 +8,7 @@ if (Number.isNaN(PORT)) {
 
 const ENV = process.env.ENV ?? "development";
 
-const CORS_ORIGIN = process.env.CORS_ORIGIN ?? "http://localhost:5173";
+const CORS_ORIGIN = process.env.CORS_ORIGIN ?? "http://localhost:3000";
 
 const LOGGER = ENV === "development" ? "debug" : "info";
 

@@ -23,7 +23,7 @@ const swaggerPlugin = fp(async (app) => {
             servers: [
 
                 {
-                    url: "http://localhost:3000",
+                    url: "http://localhost:5000",
 
                     description:
                         "Development server",
@@ -38,6 +38,18 @@ const swaggerPlugin = fp(async (app) => {
 
                     description:
                         "Authentication and account management",
+                },
+
+                {
+                    name: "Friends",
+                    description:
+                        "Friend requests and friendship management",
+                },
+
+                {
+                    name: "Conversations",
+                    description:
+                        "Conversation and chat management",
                 },
 
             ],
