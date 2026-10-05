@@ -2,7 +2,6 @@ import { group } from "node:console";
 import { ApiError } from "../../Config/Error.js";
 import { prisma } from "../../Db/prisma.js";
 import { archiveConversationData, createConversationData, deleteConversationData, getConversationData, getConversationsData, muteConversationData, pinConversationData, unarchiveConversationData, unmuteConversationData, unpinConversationData, updateConversationData } from "../../Interfaces/Conversation/service.interface.js";
-import { User } from "../../Models1/Auth/user.model.js";
 import { app } from "../../App.js";
 import { create } from "node:domain";
 

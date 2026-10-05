@@ -1,6 +1,6 @@
 import { FastifyPluginAsync } from "fastify";
-import { loginUserSchema, registerUserSchema, updateUserSchema } from "../../Schemas/Auth/user.schemas.js";
-import { getUserController, loginUserController, logoutFromAllDevicesUserController, logoutUserController, registerUserController, updateUserController } from "../../Controllers/Auth/user.controller.js";
+import { forgotPasswordSchema, loginUserSchema, registerUserSchema, resetPasswordSchema, updateUserSchema } from "../../Schemas/Auth/user.schemas.js";
+import { forgotPasswordUserController, getUserController, loginUserController, logoutFromAllDevicesUserController, logoutUserController, refreshAccessTokenController, registerUserController, resetPasswordUserController, updateUserController } from "../../Controllers/Auth/user.controller.js";
 import { verifyUser } from "../../Middlewares/Auth/auth.middleware.js";
 
 
@@ -57,6 +57,44 @@ const userRoutes: FastifyPluginAsync = async (fastify) => {
         },
         preHandler: verifyUser,
     }, updateUserController);
+
+    fastify.post(
+        "/refresh",
+        {
+            schema: {
+                tags: ["Auth"],
+                summary:
+                    "Refresh access token",
+            },
+        },
+        refreshAccessTokenController
+    );
+
+    fastify.post(
+        "/forgot-password",
+        {
+            schema: {
+                tags: ["Auth"],
+                summary:
+                    "Request password reset",
+                body: forgotPasswordSchema,
+            },
+        },
+        forgotPasswordUserController
+    );
+
+    fastify.post(
+        "/reset-password",
+        {
+            schema: {
+                tags: ["Auth"],
+                summary:
+                    "Reset password",
+                body: resetPasswordSchema,
+            },
+        },
+        resetPasswordUserController
+    );
 
 }
 

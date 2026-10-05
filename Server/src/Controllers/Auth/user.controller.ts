@@ -1,10 +1,11 @@
 import { FastifyReply, FastifyRequest } from "fastify"
 import { ApiError } from "../../Config/Error.js"
-import { loginUserSchema, registerUserSchema, updateUserSchema } from "../../Schemas/Auth/user.schemas.js"
-import { accessTokenCookieOptions, getUserService, loginUserService, logoutFromAllDevicesUserService, logoutUserService, refreshTokenCookieOptions, registerUserService, updateUserService } from "../../Services/Auth/user.service.js";
+import { forgotPasswordSchema, loginUserSchema, registerUserSchema, resetPasswordSchema, updateUserSchema } from "../../Schemas/Auth/user.schemas.js"
+import { accessTokenCookieOptions, forgotPasswordService, getUserService, loginUserService, logoutFromAllDevicesUserService, logoutUserService, refreshTokenCookieOptions, registerUserService, resetPasswordService, updateUserService } from "../../Services/Auth/user.service.js";
 import { LoginUserData, RegisterUserData, UpdateUserData } from "../../Interfaces/Auth/user.service.interface.js";
 import { app } from "../../App.js";
 import { AuthenticateUser } from "../../Interfaces/Auth/user.middleware.interface.js";
+import { rotateRefreshTokenService } from "../../Services/Auth/session.service.js";
 
 
 const registerUserController = async (req: FastifyRequest, reply: FastifyReply) => {
@@ -97,6 +98,10 @@ const getUserController = async (req: FastifyRequest, reply: FastifyReply) => {
 
     try {
         const user = await getUserService({ userId: (req.user as AuthenticateUser).userId });
+
+        if (!user) {
+            throw new ApiError(404, "User not found");
+        }
 
         return reply.status(200).send({
             success: true,
@@ -292,34 +297,94 @@ const deleteUserController = async (req: FastifyRequest, reply: FastifyReply) =>
 const forgotPasswordUserController = async (req: FastifyRequest, reply: FastifyReply) => {
 
     try {
+        const data = forgotPasswordSchema.parse(req.body);
+
+        const res = await forgotPasswordService({
+            identifier: data.identifier,
+        });
+
+        return reply.status(200).send({
+            success: true,
+            message: res.message,
+        });
 
     } catch (err: unknown) {
         if (err instanceof ApiError) {
+            app.log.error(
+                { err },
+                "Failed to process forgot password"
+            );
 
+            throw err;
         }
+
+        throw err;
     }
 }
 
 const resetPasswordUserController = async (req: FastifyRequest, reply: FastifyReply) => {
 
     try {
+        const data = resetPasswordSchema.parse(req.body);
+
+        const res = await resetPasswordService({
+            token: data.token,
+            newPassword: data.newPassword,
+            confirmPassword: data.confirmPassword,
+        })
+
+        return reply.status(200).send({
+            success: true,
+            message: res.message,
+        });
 
     } catch (err: unknown) {
         if (err instanceof ApiError) {
+            app.log.error(
+                { err },
+                "Failed to reset password"
+            );
 
+            throw err;
         }
+
+        throw err;
     }
 }
 
 const refreshAccessTokenController = async (req: FastifyRequest, reply: FastifyReply) => {
 
     try {
+        const refreshToken = req.cookies.RefreshToken;
+
+        if (!refreshToken) {
+            throw new ApiError(401, "Refresh token not found");
+        }
+
+        const res = await rotateRefreshTokenService({
+            refreshToken
+        });
+
+        reply.setCookie("AccessToken", res.AccessToken, accessTokenCookieOptions);
+        reply.setCookie("RefreshToken", res.RefreshToken, refreshTokenCookieOptions);
+
+        return reply.status(200).send({
+            success: true,
+            message: "Access token refreshed successfully",
+        })
 
     } catch (err: unknown) {
-        if (err instanceof ApiError) {
+    if (err instanceof ApiError) {
+        app.log.error(
+            { err },
+            "Failed to refresh access token"
+        );
 
-        }
+        throw err;
     }
+
+    throw err;
+}
 }
 
 export { registerUserController, loginUserController, getUserController, logoutUserController, logoutFromAllDevicesUserController, verifyEmailController, resendEmailVerificationController, updateUserController, deleteUserController, forgotPasswordUserController, resetPasswordUserController, refreshAccessTokenController }

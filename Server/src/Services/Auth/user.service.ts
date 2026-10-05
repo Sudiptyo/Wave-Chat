@@ -1,8 +1,9 @@
-import { CookieSerializeOptions } from "@fastify/cookie"
+import { CookieSerializeOptions } from "@fastify/cookie";
 import { Prisma } from "../../../generated/prisma/client.js";
-import { ApiError } from "../../Config/Error.js"
-import { COOKIE_ENV, REFRESH_TOKEN_EXPIRY_IN_MS } from "../../Config/Dotenv.js"
+import { ApiError } from "../../Config/Error.js";
+import { COOKIE_ENV, REFRESH_TOKEN_EXPIRY_IN_MS } from "../../Config/Dotenv.js";
 import {
+    ForgotPasswordData,
     GetUserData,
     LoginContext,
     LoginUserData,
@@ -10,16 +11,21 @@ import {
     LogoutUserFromAllDevicesData,
     RegisterContext,
     RegisterUserData,
+    ResetPasswordData,
     UpdateUserData
-} from "../../Interfaces/Auth/user.service.interface.js"
-import { app } from "../../App.js"
-import { prisma } from "../../Db/prisma.js"
-import bcrypt from "bcryptjs"
+} from "../../Interfaces/Auth/user.service.interface.js";
+import { app } from "../../App.js";
+import { prisma } from "../../Db/prisma.js";
+import bcrypt from "bcryptjs";
 import {
     createSessionService,
     revokeAllUserSessionsService,
     revokeSessionService
-} from "./session.service.js"
+} from "./session.service.js";
+import crypto from "node:crypto";
+import { passwordResetKey } from "../Redis/keys.js";
+import { redis } from "../Redis/Redis.js";
+import { sendPasswordResetEmail } from "../Email/email.service.js";
 
 
 export const accessTokenCookieOptions: CookieSerializeOptions = {
@@ -203,7 +209,7 @@ const registerUserService = async (
             );
         }
 
- 
+
         const passwordHash =
             await bcrypt.hash(password, 12);
 
@@ -872,14 +878,217 @@ const logoutFromAllDevicesUserService = async (
     }
 };
 
+const refreshAccessTokenService = async () => {
 
-// Keep your existing future methods here.
-// verifyEmailService
-// resendEmailVerificationService
-// deleteUserService
-// forgotPasswordUserService
-// resetPasswordUserService
-// refreshAccessTokenService
+    try {
+
+    } catch (err: unknown) {
+        if (err instanceof ApiError) {
+
+        }
+    }
+}
+
+const forgotPasswordService = async (data: ForgotPasswordData) => {
+
+    try {
+        const { identifier } = data;
+        if (!identifier) {
+            throw new ApiError(400, "Email or mobile number is required");
+        }
+
+        const isEmail = identifier.includes("@");
+        const normalizedIdentifier = isEmail ? identifier.trim().toLowerCase() : identifier.trim();
+
+        const user = await prisma.user.findFirst({
+            where: isEmail ?
+                {
+                    email: normalizedIdentifier
+                } : {
+                    mobileNo: normalizedIdentifier
+                }
+        });
+
+        if (!user) {
+            throw new ApiError(404, "If an account exists, a password reset link has been sent");
+        }
+
+        // Generate reset token
+        /*
+        * Generate a cryptographically secure
+        * reset token.
+        */
+        const resetToken =
+            crypto
+                .randomBytes(32)
+                .toString("hex");
+
+        /*
+         * Store only the hash in Redis.
+         */
+        const tokenHash =
+            crypto
+                .createHash("sha256")
+                .update(resetToken)
+                .digest("hex");
+
+        const key = passwordResetKey(tokenHash);
+
+        /*
+        * Token expires after 15 minutes.
+        */
+        await redis.set(key, user.id, "EX", 15 * 60);
+        if (user.email) {
+            await sendPasswordResetEmail({
+                email: user.email,
+                fullName: user.fullName,
+                resetToken
+            })
+        }
+
+        return {
+            message:
+                "If an account exists, a password reset link has been sent",
+        };
+
+    } catch (err: unknown) {
+        if (err instanceof ApiError) {
+            app.log.error(
+                { err },
+                "Failed to create password reset request"
+            );
+
+            throw err;
+        }
+
+        throw new ApiError(
+            500,
+            "Failed to process password reset request"
+        );
+    }
+}
+
+const resetPasswordService = async (data: ResetPasswordData) => {
+
+    try {
+        const { token, newPassword, confirmPassword } = data;
+        if (!token) {
+            throw new ApiError(400, "User Id is required");
+        }
+
+        if (!newPassword) {
+            throw new ApiError(400, "New password is required");
+        }
+
+        if (!confirmPassword) {
+            throw new ApiError(400, "Confirm password is required");
+        }
+
+        if (newPassword.trim() !== confirmPassword.trim()) {
+            throw new ApiError(400, "Passwords do not match");
+        }
+
+        /*
+         * Hash incoming token.
+         */
+        const tokenHash =
+            crypto
+                .createHash("sha256")
+                .update(token)
+                .digest("hex");
+        const key = passwordResetKey(tokenHash);
+
+        /*
+         * Redis contains the user ID.
+         */
+        const userId = await redis.get(key);
+        if (!userId) {
+            throw new ApiError(400, "Invalid or expired reset token");
+        }
+
+        const hashedPassword = await bcrypt.hash(newPassword.trim(), 12);
+
+        /*
+        * Change password and revoke
+        * every existing login session.
+        */
+        await prisma.$transaction(async (tx) => {
+            await tx.user.update({
+                where: {
+                    id: userId
+                },
+                data: {
+                    password: hashedPassword
+                }
+            });
+
+            await tx.authSession.updateMany({
+                where: {
+                    userId,
+                    isRevoked: false
+                },
+                data: {
+                    isRevoked: true,
+                    revokedAt: new Date(),
+                }
+            });
+        });
+
+        /*
+        * One-time token.
+        */
+        await redis.del(key);
+
+        return {
+            message:
+                "Password reset successfully",
+        };
+
+    } catch (err: unknown) {
+        if (err instanceof ApiError) {
+            app.log.error({ err }, "Failed to reset password");
+
+            throw err;
+        }
+
+        throw new ApiError(
+            500,
+            "Failed to process password reset request"
+        );
+    }
+}
+
+const emailVerificationService = async () => {
+
+    try {
+
+    } catch (err: unknown) {
+        if (err instanceof ApiError) {
+
+        }
+    }
+}
+const resendEmailVerificationService = async () => {
+
+    try {
+
+    } catch (err: unknown) {
+        if (err instanceof ApiError) {
+
+        }
+    }
+}
+
+const deleteAccountService = async () => {
+
+    try {
+
+    } catch (err: unknown) {
+        if (err instanceof ApiError) {
+
+        }
+    }
+}
 
 
 export {
@@ -889,10 +1098,10 @@ export {
     updateUserService,
     logoutUserService,
     logoutFromAllDevicesUserService,
-    // verifyEmailService,
-    // resendEmailVerificationService,
-    // deleteUserService,
-    // forgotPasswordUserService,
-    // resetPasswordUserService,
-    // refreshAccessTokenService
+    refreshAccessTokenService,
+    forgotPasswordService,
+    resetPasswordService,
+    emailVerificationService,
+    resendEmailVerificationService,
+    deleteAccountService
 }

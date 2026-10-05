@@ -38,8 +38,6 @@ interface RegisterContext {
 }
 
 interface LoginUserData {
-    // mobileNo?: string;
-    // email: string;
     identifier: string,
     password?: string;
 }
@@ -80,14 +78,14 @@ interface LogoutUserFromAllDevicesData {
 }
 
 interface ForgotPasswordData {
-    email: string;
+    identifier: string,
 }
 
-interface ChangePasswordData {
-    userId: string;
+interface ResetPasswordData {
+    token: string;
     oldPassword?: string;
     newPassword: string;
     confirmPassword: string;
 }
 
-export { RegisterUserData, RegisterContext, GetUserData, LoginUserData, LoginContext, LogoutUserData, LogoutUserFromAllDevicesData, UpdateUserData, ForgotPasswordData, ChangePasswordData }
+export { RegisterUserData, RegisterContext, GetUserData, LoginUserData, LoginContext, LogoutUserData, LogoutUserFromAllDevicesData, UpdateUserData, ForgotPasswordData, ResetPasswordData }

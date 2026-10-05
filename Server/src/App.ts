@@ -14,9 +14,10 @@ import userRoutes from "./Routes/Auth/user.route.js";
 import { swaggerPlugin } from "./Plugins/swagger.plugin.js";
 import googleRoutes from "./Routes/Auth/google.route.js";
 import { Server } from "socket.io";
-import { initializeSocket } from "./Socket/index.js";
+import { initializeSocket } from "./Services/Socket/index.js";
 import conversationRoutes from "./Routes/Conversations/conversation.route.js";
 import friendRequestRoutes from "./Routes/Friend Request/request.route.js";
+import healthRoute from "./Routes/Health/health.route.js";
 
 const app = fastify({
   logger: {
@@ -112,6 +113,10 @@ app.setErrorHandler((err, request, reply) => {
 });
 
 await app.register(swaggerPlugin);
+
+app.register(healthRoute, {
+  prefix: "/api/v1/health"
+});
 
 app.register(userRoutes, {
   prefix: "/api/v1/auth"

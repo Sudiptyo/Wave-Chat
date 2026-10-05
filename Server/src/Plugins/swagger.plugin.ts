@@ -34,8 +34,13 @@ const swaggerPlugin = fp(async (app) => {
             tags: [
 
                 {
-                    name: "Auth",
+                    name: "Health",
+                    description:
+                        "Server and infrastructure health checks",
+                },
 
+                {
+                    name: "Auth",
                     description:
                         "Authentication and account management",
                 },

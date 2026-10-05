@@ -1,11 +1,14 @@
 import z from "zod"
 
+// const mobileNumberSchema = z
+//     .string()
+//     .regex(
+//         /^[6-9]\d{9}$/,
+//         "Mobile number must be a valid 10-digit number",
+//     );
+
 const mobileNumberSchema = z
-    .string()
-    .regex(
-        /^[6-9]\d{9}$/,
-        "Mobile number must be a valid 10-digit number",
-    );
+    .e164("Please enter a valid mobile number");
 
 const passwordSchema = z
     .string()
@@ -39,7 +42,7 @@ export const registerUserSchema = z.object({
         .string()
         .trim()
         .toLowerCase()
-        .email("Please enter a valid email")
+        .email({ error: "Please enter a valid email" })
         .optional(),
 
     password: passwordSchema,
@@ -56,8 +59,12 @@ export const loginUserSchema = z.object({
                 const isEmail =
                     /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
 
+                // const isMobile =
+                //     /^\+?[1-9]\d{9,14}$/.test(value);
+
                 const isMobile =
-                    /^\+?[1-9]\d{9,14}$/.test(value);
+                    z.string().safeParse(value).success &&
+                    /^\+[1-9]\d{9,14}$/.test(value);
 
                 return isEmail || isMobile;
             },
@@ -126,7 +133,67 @@ export const updateUserSchema = z.object({
 
     });
 
+export const forgotPasswordSchema =
+    z.object({
+        identifier: z
+            .string()
+            .trim()
+            .min(1, "Email or mobile number is required")
+            .max(254, "Identifier is too long")
+            .refine(
+                (value) => {
+                    const isEmail =
+                        /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+
+                    // const isMobile =
+                    //     /^\+?[1-9]\d{9,14}$/.test(value);
+
+                    const isMobile =
+                        z.string().safeParse(value).success &&
+                        /^\+[1-9]\d{9,14}$/.test(value);
+
+                    return isEmail || isMobile;
+                },
+                "Enter a valid email or mobile number"
+            ),
+    });
+
+export const resetPasswordSchema =
+    z.object({
+        token: z
+            .string()
+            .trim()
+            .min(
+                1,
+                "Reset token is required"
+            ),
+
+        newPassword: passwordSchema,
+
+        confirmPassword: passwordSchema,
+    })
+        .superRefine(
+            (data, ctx) => {
+                if (
+                    data.newPassword !==
+                    data.confirmPassword
+                ) {
+                    ctx.addIssue({
+                        code: "custom",
+
+                        path: [
+                            "confirmPassword",
+                        ],
+
+                        message:
+                            "Passwords do not match",
+                    });
+                }
+            }
+        );
+
 export type registerUserData = z.infer<typeof registerUserSchema>;
 export type loginUserData = z.infer<typeof loginUserSchema>;
-export type updateUserData =
-    z.infer<typeof updateUserSchema>;   
+export type updateUserData = z.infer<typeof updateUserSchema>;
+export type forgotPasswordData = z.infer<typeof forgotPasswordSchema>;
+export type resetPasswordData = z.infer<typeof resetPasswordSchema>;
